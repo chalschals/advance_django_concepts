@@ -1,0 +1,10 @@
+###testing
+    pip install coverage
+    coverage run manage.py test
+    ###To check what are the test cases we can create, run the following command
+        coverage html
+        |
+        |---> this will create a folder called htmlcov we can run the index.html from that folder for more details
+
+    ###if virtual environment folder ther in project direcctory we need to skip that by
+        coverage run --omit='*/<virtual_env_folder_name>/*' manage.py test
