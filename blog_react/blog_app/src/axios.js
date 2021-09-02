@@ -85,6 +85,12 @@ axiosInstance.interceptors.response.use(
 			window.location.href = '/login/';
 			return Promise.reject(error);
 		}
+		if (
+			error.response.status === 404
+		) {
+			window.location.href = '/';
+			return Promise.reject(error);
+		}
 
 		// specific error handling done elsewhere
 		return Promise.reject(error);
