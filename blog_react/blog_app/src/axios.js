@@ -53,7 +53,7 @@ axiosInstance.interceptors.response.use(
 				//console.log(tokenParts.exp);
 
 				if (tokenParts.exp > now) {
-                    alert('token expired')
+                    console.log('token expired')
 					return axiosInstance
 						.post('/token/refresh/', { refresh: refreshToken })
 						.then((response) => {

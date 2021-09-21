@@ -10,6 +10,7 @@ import Footer from './components/Footer'
 import Login from './components/Login'
 import Logout from './components/Logout'
 import Single from './components/Single'
+import Search from './components/Search';
 ReactDOM.render(
   <Router>
     <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.render(
         <Route exact path="/login" component={Login} />
         <Route exact path="/logout" component={Logout} />
         <Route exact path="/post/:slug" component={Single} />
+        <Route path="/search" component={Search} />
       </Switch>
       <Footer />
     </React.StrictMode>
