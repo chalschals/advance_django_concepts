@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import axiosInstance from '../axios';
-
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -9,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Link from '@material-ui/core/Link';
-import { useLocation } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	cardMedia: {
@@ -38,34 +35,22 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-const Search = () => {
+const Posts = (props) => {
+	const { posts } = props;
 	const classes = useStyles();
-	const search = 'search';
-	const [appState, setAppState] = useState({
-		search: '',
-		posts: [],
-	});
-
-	useEffect(() => {
-		axiosInstance.get(search + '/' + window.location.search).then((res) => {
-			const allPosts = res.data;
-			setAppState({ posts: allPosts });
-			console.log(res.data);
-		});
-	}, [setAppState]);
-
+	if (!posts || posts.length === 0) return <p>Can not find any posts, sorry</p>;
 	return (
 		<React.Fragment>
 			<Container maxWidth="md" component="main">
 				<Grid container spacing={5} alignItems="flex-end">
-					{appState.posts.map((post) => {
+					{posts.map((post) => {
 						return (
 							// Enterprise card is full width at sm breakpoint
 							<Grid item key={post.id} xs={12} md={4}>
 								<Card className={classes.card}>
 									<Link
 										color="textPrimary"
-										href={'/post/' + post.slug}
+										href={'post/' + post.slug}
 										className={classes.link}
 									>
 										<CardMedia
@@ -98,4 +83,4 @@ const Search = () => {
 		</React.Fragment>
 	);
 };
-export default Search;
+export default Posts;

@@ -102,6 +102,32 @@ class PostCustomSearch(generics.ListAPIView):
         else:
             return Post.objects.all()
 
+###############ADMIN OPTIONS###############
+
+
+class CreatePost(generics.CreateAPIView):
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+
+
+class EditPost(generics.UpdateAPIView):
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+
+
+class DeletePost(generics.RetrieveDestroyAPIView):
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+
+
+class AdminPostDetails(generics.RetrieveAPIView):
+    queryset = Post.objects.all()
+    permission_classes = [IsAuthenticated]
+    serializer_class = PostSerializer
+
 
 '''
 @@@@@ViewSet Functions@@@@@

@@ -3,7 +3,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import { NavLink } from 'react-router-dom';
 import Link from '@material-ui/core/Link';
 import Button from '@material-ui/core/Button';
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 function Header() {
 	const classes = useStyles();
 	let history = useHistory();
-	const [data, setSearchData] = useState({ search: '' });
+	const [data, setData] = useState({ search: '' });
 
 	const goSearch = (e) => {
 		history.push({
@@ -62,7 +62,7 @@ function Header() {
 
 					<SearchBar
 						value={data.search}
-						onChange={(newValue) => setSearchData({ search: newValue })}
+						onChange={(newValue) => setData({ search: newValue })}
 						onRequestSearch={() => goSearch(data.search)}
 					/>
 

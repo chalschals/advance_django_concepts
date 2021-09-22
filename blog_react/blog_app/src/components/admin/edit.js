@@ -1,14 +1,10 @@
-import React, { useState } from 'react';
-import axiosInstance from '../axios';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axiosInstance from '../../axios';
+import { useHistory, useParams } from 'react-router-dom';
 //MaterialUI
-import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -21,10 +17,6 @@ const useStyles = makeStyles((theme) => ({
 		flexDirection: 'column',
 		alignItems: 'center',
 	},
-	avatar: {
-		margin: theme.spacing(1),
-		backgroundColor: theme.palette.secondary.main,
-	},
 	form: {
 		width: '100%', // Fix IE 11 issue.
 		marginTop: theme.spacing(3),
@@ -34,15 +26,31 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function SignUp() {
+export default function Create() {
 	const history = useHistory();
+	const { id } = useParams();
 	const initialFormData = Object.freeze({
-		email: '',
-		username: '',
-		password: '',
+		id: '',
+		title: '',
+		slug: '',
+		excerpt: '',
+		content: '',
 	});
 
 	const [formData, updateFormData] = useState(initialFormData);
+
+	useEffect(() => {
+		axiosInstance.get('admin/details/' + id).then((res) => {
+			updateFormData({
+				...formData,
+				['title']: res.data.title,
+				['excerpt']: res.data.excerpt,
+				['slug']: res.data.slug,
+				['content']: res.data.content,
+			});
+			console.log(res.data);
+		});
+	}, [updateFormData]);
 
 	const handleChange = (e) => {
 		updateFormData({
@@ -56,28 +64,27 @@ export default function SignUp() {
 		e.preventDefault();
 		console.log(formData);
 
-		axiosInstance
-			.post(`user/register/`, {
-				email: formData.email,
-				user_name: formData.username,
-				password: formData.password,
-			})
-			.then((res) => {
-				history.push('/login');
-				console.log(res);
-				console.log(res.data);
-			});
+		axiosInstance.put(`admin/edit/` + id + '/', {
+			title: formData.title,
+			slug: formData.slug,
+			auther: JSON.parse(atob(localStorage.getItem('refresh_token').split('.')[1])).user_id,
+			excerpt: formData.excerpt,
+			content: formData.content,
+		});
+		history.push({
+			pathname: '/admin/',
+		});
+		window.location.reload();
 	};
 
 	const classes = useStyles();
 
 	return (
-		<Container component="main" maxWidth="xs">
+		<Container component="main" maxWidth="sm">
 			<CssBaseline />
 			<div className={classes.paper}>
-				<Avatar className={classes.avatar}></Avatar>
 				<Typography component="h1" variant="h5">
-					Sign up
+					Edit Post
 				</Typography>
 				<form className={classes.form} noValidate>
 					<Grid container spacing={2}>
@@ -86,10 +93,11 @@ export default function SignUp() {
 								variant="outlined"
 								required
 								fullWidth
-								id="email"
-								label="Email Address"
-								name="email"
-								autoComplete="email"
+								id="title"
+								label="Post Title"
+								name="title"
+								autoComplete="title"
+								value={formData.title}
 								onChange={handleChange}
 							/>
 						</Grid>
@@ -98,10 +106,26 @@ export default function SignUp() {
 								variant="outlined"
 								required
 								fullWidth
-								id="username"
-								label="Username"
-								name="username"
-								autoComplete="username"
+								id="excerpt"
+								label="Post Excerpt"
+								name="excerpt"
+								autoComplete="excerpt"
+								value={formData.excerpt}
+								onChange={handleChange}
+								multiline
+								rows={8}
+							/>
+						</Grid>
+						<Grid item xs={12}>
+							<TextField
+								variant="outlined"
+								required
+								fullWidth
+								id="slug"
+								label="slug"
+								name="slug"
+								autoComplete="slug"
+								value={formData.slug}
 								onChange={handleChange}
 							/>
 						</Grid>
@@ -110,18 +134,14 @@ export default function SignUp() {
 								variant="outlined"
 								required
 								fullWidth
-								name="password"
-								label="Password"
-								type="password"
-								id="password"
-								autoComplete="current-password"
+								id="content"
+								label="content"
+								name="content"
+								autoComplete="content"
+								value={formData.content}
 								onChange={handleChange}
-							/>
-						</Grid>
-						<Grid item xs={12}>
-							<FormControlLabel
-								control={<Checkbox value="allowExtraEmails" color="primary" />}
-								label="I want to receive inspiration, marketing promotions and updates via email."
+								multiline
+								rows={8}
 							/>
 						</Grid>
 					</Grid>
@@ -133,15 +153,8 @@ export default function SignUp() {
 						className={classes.submit}
 						onClick={handleSubmit}
 					>
-						Sign Up
+						Update Post
 					</Button>
-					<Grid container justifyContent="flex-end">
-						<Grid item>
-							<Link href="#" variant="body2">
-								Already have an account? Sign in
-							</Link>
-						</Grid>
-					</Grid>
 				</form>
 			</div>
 		</Container>
